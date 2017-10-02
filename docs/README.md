@@ -14,7 +14,7 @@ Users will be able to
 
 This game will have a single screen with brick walls and a few doors. There will also be some keys and a treasure.
 
-TKTKTKTKTK
+<img src="warrior_adventure.png" />
 
 ## Technologies
 
@@ -30,9 +30,9 @@ TKTKTKTKTK
 **Day 1**
 * Get webpack up and running
 * Set up index.html
+* Load and show the tile dungeon
 
 **Day 2**
-* Load and show the tile dungeon
 * Make the Warrior
 
 **Day 3**
