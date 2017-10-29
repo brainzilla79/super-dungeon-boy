@@ -199,6 +199,7 @@ class Warrior {
           row[eachCol] = 0;
           this.pos[0] = eachCol * this.board.squareW + this.board.squareW / 2;
           this.pos[1] = eachRow * this.board.squareH + this.board.squareH / 2;
+          
         }
       }
     }
@@ -211,9 +212,15 @@ class Warrior {
   }
 
   move(dir) {
-    
-    this.pos[0] += dir[0];
-    this.pos[1] += dir[1];
+    const nextPos = [this.pos[0] + dir[0], this.pos[1] + dir[1]];
+    const nextGridCol = Math.floor((nextPos[0] + this.board.squareW) / this.board.squareW);
+    const nextGridRow = Math.floor((nextPos[1] + this.board.squareH) / this.board.squareH);
+    console.log(this.board.grid[nextGridRow][nextGridCol]);
+    console.log(nextPos);
+
+    if (this.board.grid[nextGridRow][nextGridCol] !== 1) {
+      this.pos = nextPos;
+    } 
   }
 }
 
