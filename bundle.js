@@ -136,7 +136,7 @@ const Grids = {
     return [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-      [1, 0, 3, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 3, 1],
+      [1, 0, 3, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 3, 0, 3, 1],
       [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 4, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 1, 1, 4, 1, 1, 1, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -144,9 +144,9 @@ const Grids = {
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 5, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
@@ -163,8 +163,8 @@ module.exports = Grids;
 const Util = __webpack_require__(0);
 
 class Key {
-  constructor(ctx) {
-    this.pos = [0, 0];
+  constructor(ctx, pos) {
+    this.pos = pos;
     this.ctx = ctx;
     this.img = document.getElementById("key");
   }
@@ -191,8 +191,7 @@ class Warrior {
     this.pos = [0, 0];
     this.width = 50;
     this.height = 50;
-    this.img = document.getElementById('warriorRight');
-    this.reset();
+    this.img = document.getElementById("warriorRight");
   }
 
   reset() {
@@ -203,36 +202,19 @@ class Warrior {
           row[eachCol] = 0;
           this.pos[0] = eachCol * this.board.squareW + this.board.squareW / 2;
           this.pos[1] = eachRow * this.board.squareH + this.board.squareH / 2;
-          
         }
       }
     }
   }
 
   draw() {
-    this.ctx.drawImage(this.img, this.pos[0], this.pos[1], this.width, this.height);
-  }
-
-  move(dir) {
-    const nextPos = [this.pos[0] + dir[0], this.pos[1] + dir[1]];
-    let nextGridCol;
-    let nextGridRow;
-    if (dir[0] < 0) {
-      this.img = document.getElementById("warriorLeft");
-    } else if (dir[0] > 0) {
-      this.img = document.getElementById("warriorRight");
-    }
-    if (dir[0] < 0 || dir[1] < 0) {
-      nextGridCol = Math.floor((nextPos[0] + this.board.squareW / 2) / this.board.squareW);
-      nextGridRow = Math.floor((nextPos[1] + this.board.squareH / 2) / this.board.squareH);
-    } else {
-      nextGridCol = Math.floor((nextPos[0] + this.board.squareW) / this.board.squareW);
-      nextGridRow = Math.floor((nextPos[1] + this.board.squareH) / this.board.squareH);
-    }
-    
-    if (this.board.grid[nextGridRow][nextGridCol] !== 1) {
-      this.pos = nextPos;
-    } 
+    this.ctx.drawImage(
+      this.img,
+      this.pos[0],
+      this.pos[1],
+      this.width,
+      this.height
+    );
   }
 }
 
@@ -269,7 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const board = new Board(ctx, squareW, squareH, boardGrid);
 
   const game = new Game(ctx, board);
-  game.warrior.reset();
 
   const drawAll = () => {
     game.render();
@@ -278,16 +259,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", e => {
     switch (e.keyCode) {
       case 37:
-        game.warrior.move(Warrior.MOVES.left);
+        game.move(Warrior.MOVES.left);
         break;
       case 38:
-        game.warrior.move(Warrior.MOVES.up);
+        game.move(Warrior.MOVES.up);
         break;
       case 39:
-        game.warrior.move(Warrior.MOVES.right);
+        game.move(Warrior.MOVES.right);
         break;
       case 40:
-        game.warrior.move(Warrior.MOVES.down);
+        game.move(Warrior.MOVES.down);
         break;
     }
   });
@@ -301,42 +282,109 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const Key = __webpack_require__(3);
 const Warrior = __webpack_require__(4);
+const Door = __webpack_require__(7);
 
 class Game {
   constructor(ctx, board) {
     this.ctx = ctx;
     this.board = board;
     this.keys = [];
+    this.doors = [];
     this.warrior = new Warrior(ctx, board);
-    this.addKeys();
+    this.warrior.reset();
+    this.addKeysAndDoors();
   }
 
-  addKeys() {
+  addKeysAndDoors() {
     for (let eachRow = 0; eachRow < this.board.grid.length; eachRow++) {
       const row = this.board.grid[eachRow];
       for (let eachCol = 0; eachCol < row.length; eachCol++) {
+        const pos = [
+          eachCol * this.board.squareW,
+          eachRow * this.board.squareH
+        ];
         if (row[eachCol] === 3) {
-          const key = new Key(this.ctx);
-          key.pos[0] = eachCol * this.board.squareW;
-          key.pos[1] = eachRow * this.board.squareH;
+          const key = new Key(this.ctx, pos);
           this.keys.push(key);
+        } else if (row[eachCol] === 4) {
+          const door = new Door(this.ctx, pos);
+          this.doors.push(door);
         }
       }
     }
   }
 
-  drawKeys() {
+  drawKeysAndDoors() {
     this.keys.forEach(key => key.draw());
+    this.doors.forEach(door => door.draw());
+  }
+
+  move(dir) {
+    const nextPos = [
+      this.warrior.pos[0] + dir[0],
+      this.warrior.pos[1] + dir[1]
+    ];
+    let nextGridCol;
+    let nextGridRow;
+    
+    if (dir[0] < 0) {
+      this.warrior.img = document.getElementById("warriorLeft");
+    } else if (dir[0] > 0) {
+      this.warrior.img = document.getElementById("warriorRight");
+    }
+    if (dir[0] < 0 || dir[1] < 0) {
+      nextGridCol = Math.floor(
+        (nextPos[0] + this.board.squareW / 2) / this.board.squareW
+      );
+      nextGridRow = Math.floor(
+        (nextPos[1] + this.board.squareH / 2) / this.board.squareH
+      );
+    } else {
+      nextGridCol = Math.floor(
+        (nextPos[0] + this.board.squareW) / this.board.squareW
+      );
+      nextGridRow = Math.floor(
+        (nextPos[1] + this.board.squareH) / this.board.squareH
+      );
+    }
+
+    if (
+      this.board.grid[nextGridRow][nextGridCol] !== 1 &&
+      this.board.grid[nextGridRow][nextGridCol] !== 4
+    ) {
+      this.warrior.pos = nextPos;
+    }
   }
 
   render() {
     this.board.draw();
-    this.drawKeys();
+    this.drawKeysAndDoors();
     this.warrior.draw();
+    // console.log(this.warrior.pos);
   }
 }
 
 module.exports = Game;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+class Door {
+  constructor(ctx, pos) {
+    this.img = document.getElementById("door");
+    this.pos = pos;
+    this.ctx = ctx;
+  }
+
+  draw() {
+    this.ctx.drawImage(this.img, this.pos[0], this.pos[1], 40, 40);
+  }
+}
+
+module.exports = Door;
+
 
 /***/ })
 /******/ ]);
