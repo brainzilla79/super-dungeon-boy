@@ -165,10 +165,13 @@ const Util = __webpack_require__(0);
 class Key {
   constructor(ctx) {
     this.pos = [0, 0];
+    this.ctx = ctx;
+    this.img = document.getElementById("key");
   }
 
   draw() {
-    Util.colorCircle(this.ctx, this.pos, 20, "#e8f442");
+    this.ctx.drawImage(this.img, this.pos[0], this.pos[1], 40, 40);
+    // Util.colorCircle(this.ctx, this.pos, 20, "#e8f442");
   }
 }
 
@@ -266,21 +269,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const boardGrid = Grids.levelOne();
 
   const board = new Board(ctx, squareW, squareH, boardGrid);
-  const warrior = new Warrior(ctx, board);
-  const key = new Key(ctx, board);
 
   const game = new Game(ctx, board);
-  warrior.reset();
+  game.warrior.reset();
 
   const drawAll = () => {
-   
-    board.draw();
-    warrior.draw();
-  };
-
-  const updateAll = () => {
-    // moveAll();
-    drawAll();
+    game.render();
   };
 
   let mouseX = 0;
@@ -300,21 +294,20 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", e => {
     switch (e.keyCode) {
       case 37:
-        warrior.move(Warrior.MOVES.left);
+        game.warrior.move(Warrior.MOVES.left);
         break;
       case 38:
-        warrior.move(Warrior.MOVES.up);
+        game.warrior.move(Warrior.MOVES.up);
         break;
       case 39:
-        warrior.move(Warrior.MOVES.right);
+        game.warrior.move(Warrior.MOVES.right);
         break;
       case 40:
-        warrior.move(Warrior.MOVES.down);
+        game.warrior.move(Warrior.MOVES.down);
         break;
     }
   });
-  setInterval(updateAll, 1000 / framesPerSecond);
-  warrior.draw();
+  setInterval(drawAll, 1000 / framesPerSecond);
 });
 
 
@@ -331,6 +324,7 @@ class Game {
     this.board = board;
     this.keys = [];
     this.warrior = new Warrior(ctx, board);
+    this.addKeys();
   }
 
   addKeys() {
@@ -338,9 +332,9 @@ class Game {
       const row = this.board.grid[eachRow];
       for (let eachCol = 0; eachCol < row.length; eachCol++) {
         if (row[eachCol] === 3) {
-          const key = new Key();
-          key.pos[0] = eachCol * this.board.squareW + this.board.squareW / 2;
-          key.pos[1] = eachRow * this.board.squareH + this.board.squareH / 2;
+          const key = new Key(this.ctx);
+          key.pos[0] = eachCol * this.board.squareW;
+          key.pos[1] = eachRow * this.board.squareH;
           this.keys.push(key);
         }
       }
@@ -353,10 +347,12 @@ class Game {
 
   render() {
     this.board.draw();
+    this.drawKeys();
     this.warrior.draw();
   }
 }
 
+module.exports = Game;
 
 /***/ })
 /******/ ]);
