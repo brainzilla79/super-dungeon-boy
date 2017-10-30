@@ -105,6 +105,7 @@ class Board {
   }
 
   draw() {
+    Util.colorRect(this.ctx, 0, 0, canvas.width, canvas.height, "#bec4ce");
     for (let eachRow = 0; eachRow < this.rows; eachRow++) {
       const row = this.grid[eachRow];
       for (let eachCol = 0; eachCol < row.length; eachCol++) {
@@ -251,6 +252,7 @@ const Grids = __webpack_require__(2);
 const Board = __webpack_require__(1);
 const Warrior = __webpack_require__(4);
 const Key = __webpack_require__(3);
+const Game = __webpack_require__(6);
 
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
@@ -267,10 +269,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const warrior = new Warrior(ctx, board);
   const key = new Key(ctx, board);
 
+  const game = new Game(ctx, board);
   warrior.reset();
 
   const drawAll = () => {
-    Util.colorRect(ctx, 0, 0, canvas.width, canvas.height, "#bec4ce");
+   
     board.draw();
     warrior.draw();
   };
@@ -313,6 +316,46 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(updateAll, 1000 / framesPerSecond);
   warrior.draw();
 });
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Key = __webpack_require__(3);
+const Warrior = __webpack_require__(4);
+
+class Game {
+  constructor(ctx, board) {
+    this.ctx = ctx;
+    this.board = board;
+    this.keys = [];
+    this.warrior = new Warrior(ctx, board);
+  }
+
+  addKeys() {
+    for (let eachRow = 0; eachRow < this.board.grid.length; eachRow++) {
+      const row = this.board.grid[eachRow];
+      for (let eachCol = 0; eachCol < row.length; eachCol++) {
+        if (row[eachCol] === 3) {
+          const key = new Key();
+          key.pos[0] = eachCol * this.board.squareW + this.board.squareW / 2;
+          key.pos[1] = eachRow * this.board.squareH + this.board.squareH / 2;
+          this.keys.push(key);
+        }
+      }
+    }
+  }
+
+  drawKeys() {
+    this.keys.forEach(key => key.draw());
+  }
+
+  render() {
+    this.board.draw();
+    this.warrior.draw();
+  }
+}
 
 
 /***/ })
