@@ -137,16 +137,16 @@ const Grids = {
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
       [1, 0, 3, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 3, 1],
-      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 4, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 4, 1, 1, 1, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
@@ -250,11 +250,9 @@ module.exports = Warrior;
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Util = __webpack_require__(0);
 const Grids = __webpack_require__(2);
 const Board = __webpack_require__(1);
 const Warrior = __webpack_require__(4);
-const Key = __webpack_require__(3);
 const Game = __webpack_require__(6);
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -264,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const squareW = 40;
   const squareH = 40;
 
-  const framesPerSecond = 30;
+  const framesPerSecond = 60;
 
   const boardGrid = Grids.levelOne();
 
@@ -277,20 +275,6 @@ document.addEventListener("DOMContentLoaded", () => {
     game.render();
   };
 
-  let mouseX = 0;
-
-  let mouseY = 0;
-
-  const updateMousePosition = e => {
-    const rect = canvas.getBoundingClientRect();
-    const root = document.documentElement;
-
-    mouseX = e.clientX - rect.left - root.scrollLeft;
-    mouseY = e.clientY - rect.top - root.scrollTop;
-    // warrior.pos = [mouseX, mouseY];wdaas
-  };
-
-  canvas.addEventListener("mousemove", updateMousePosition);
   document.addEventListener("keydown", e => {
     switch (e.keyCode) {
       case 37:
