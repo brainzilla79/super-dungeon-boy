@@ -284,19 +284,21 @@ document.addEventListener("DOMContentLoaded", () => {
 const Key = __webpack_require__(3);
 const Warrior = __webpack_require__(4);
 const Door = __webpack_require__(7);
+const Chest = __webpack_require__(8);
 
 class Game {
   constructor(ctx, board) {
     this.ctx = ctx;
     this.board = board;
     this.keys = {};
-    this.doors = [];
+    this.doors = {};
     this.warrior = new Warrior(ctx, board);
+    this.chest = new Chest(ctx, [0, 0]);
     this.warrior.reset();
-    this.addKeysAndDoors();
+    this.addObjects();
   }
 
-  addKeysAndDoors() {
+  addObjects() {
     for (let eachRow = 0; eachRow < this.board.grid.length; eachRow++) {
       const row = this.board.grid[eachRow];
       for (let eachCol = 0; eachCol < row.length; eachCol++) {
@@ -309,15 +311,19 @@ class Game {
           this.keys[[eachRow, eachCol]] = key;
         } else if (row[eachCol] === 4) {
           const door = new Door(this.ctx, pos);
-          this.doors.push(door);
+          this.doors[[eachRow, eachCol]] = door;
+        } else if (row[eachCol] === 5) {
+          this.chest.pos = pos;
+          console.log(this.chest);
         }
       }
     }
   }
 
-  drawKeysAndDoors() {
+  drawObjects() {
     Object.values(this.keys).forEach(key => key.draw());
-    this.doors.forEach(door => door.draw());
+    Object.values(this.doors).forEach(door => door.draw());
+    this.chest.draw();
   }
 
   move(dir) {
@@ -360,6 +366,8 @@ class Game {
       this.warrior.keys > 0
     ) {
       this.board.grid[nextGridRow][nextGridCol] = 0;
+      delete this.doors[[nextGridRow, nextGridCol]];
+      this.warrior.keys -= 1;
     } else if (
       this.board.grid[nextGridRow][nextGridCol] !== 1 &&
       this.board.grid[nextGridRow][nextGridCol] !== 4
@@ -370,7 +378,7 @@ class Game {
 
   render() {
     this.board.draw();
-    this.drawKeysAndDoors();
+    this.drawObjects();
     this.warrior.draw();
   }
 }
@@ -396,6 +404,31 @@ class Door {
 
 module.exports = Door;
 
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+class Chest {
+  constructor(ctx, pos) {
+    this.ctx = ctx;
+    this.img = document.getElementById("chestClosed");
+    this.width = 40;
+    this.height = 40;
+  }
+
+  draw() {
+    this.ctx.drawImage(
+      this.img,
+      this.pos[0],
+      this.pos[1],
+      this.width,
+      this.height
+    );
+  }
+}
+
+module.exports = Chest;
 
 /***/ })
 /******/ ]);
