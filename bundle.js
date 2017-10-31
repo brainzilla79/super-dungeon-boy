@@ -192,6 +192,7 @@ class Warrior {
     this.width = 50;
     this.height = 50;
     this.keys = 0;
+    this.dir = "right";
     this.img = document.getElementById("warriorRight");
   }
 
@@ -253,7 +254,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const game = new Game(ctx, board);
 
-  const drawAll = () => {
+  const update = () => {
+    game.moveObjects();
     game.render();
   };
 
@@ -261,19 +263,26 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (e.keyCode) {
       case 37:
         game.move(Warrior.MOVES.left);
+        game.warrior.dir = "left";
         break;
       case 38:
         game.move(Warrior.MOVES.up);
+        game.warrior.dir = "up";
         break;
-      case 39:
+        case 39:
         game.move(Warrior.MOVES.right);
+        game.warrior.dir = "right";
         break;
-      case 40:
+        case 40:
         game.move(Warrior.MOVES.down);
+        game.warrior.dir = "down";
+        break;
+      case 32: 
+        game.fire(game.warrior.dir);
         break;
     }
   });
-  setInterval(drawAll, 1000 / framesPerSecond);
+  setInterval(update, 1000 / framesPerSecond);
 });
 
 
@@ -285,6 +294,7 @@ const Key = __webpack_require__(3);
 const Warrior = __webpack_require__(4);
 const Door = __webpack_require__(7);
 const Chest = __webpack_require__(8);
+const Fireball = __webpack_require__(9);
 
 class Game {
   constructor(ctx, board) {
@@ -292,6 +302,7 @@ class Game {
     this.board = board;
     this.keys = {};
     this.doors = {};
+    this.fireballs = [];
     this.warrior = new Warrior(ctx, board);
     this.chest = new Chest(ctx, [0, 0]);
     this.warrior.reset();
@@ -323,6 +334,7 @@ class Game {
     Object.values(this.keys).forEach(key => key.draw());
     Object.values(this.doors).forEach(door => door.draw());
     this.chest.draw();
+    this.fireballs.forEach(fireball => fireball.draw());
   }
 
   move(dir) {
@@ -330,29 +342,16 @@ class Game {
       this.warrior.pos[0] + dir[0],
       this.warrior.pos[1] + dir[1]
     ];
-    let nextGridCol;
-    let nextGridRow;
 
     if (dir[0] < 0) {
       this.warrior.img = document.getElementById("warriorLeft");
     } else if (dir[0] > 0) {
       this.warrior.img = document.getElementById("warriorRight");
     }
-    if (dir[0] < 0 || dir[1] < 0) {
-      nextGridCol = Math.floor(
-        (nextPos[0] + this.board.squareW / 2) / this.board.squareW
-      );
-      nextGridRow = Math.floor(
-        (nextPos[1] + this.board.squareH / 2) / this.board.squareH
-      );
-    } else {
-      nextGridCol = Math.floor(
-        (nextPos[0] + this.board.squareW) / this.board.squareW
-      );
-      nextGridRow = Math.floor(
-        (nextPos[1] + this.board.squareH) / this.board.squareH
-      );
-    }
+
+    const gridPos = this.getWarriorGridPos(dir, nextPos);
+    const nextGridRow = gridPos[0];
+    const nextGridCol = gridPos[1];
 
     if (this.board.grid[nextGridRow][nextGridCol] === 3) {
       this.warrior.pos = nextPos;
@@ -376,10 +375,80 @@ class Game {
     }
   }
 
+  fire(dir) {
+    const fireball = new Fireball(this.ctx, this.warrior.pos, dir);
+    this.fireballs.push(fireball);
+  }
+
+  moveFireball(fireball) {
+    const dir = Fireball.MOVES[fireball.dir];
+    const nextPos = [fireball.pos[0] + dir[0], fireball.pos[1] + dir[1]];
+
+    const gridPos = this.getFireballGridPos(dir, nextPos);
+    const nextGridRow = gridPos[0];
+    const nextGridCol = gridPos[1];
+
+    if (this.board.grid[nextGridRow][nextGridCol] !== 1) {
+      fireball.pos = nextPos;
+    } else {
+      this.fireballs.shift();
+    }
+  }
+
+  moveObjects() {
+    this.fireballs.forEach(fireball => this.moveFireball(fireball));
+  }
+
   render() {
     this.board.draw();
     this.drawObjects();
     this.warrior.draw();
+  }
+
+  getFireballGridPos(dir, nextPos) {
+    let nextGridCol;
+    let nextGridRow;
+
+    if (dir[0] < 0 || dir[1] < 0) {
+      nextGridCol = Math.floor(
+        (nextPos[0] + this.board.squareW / 2) / this.board.squareW
+      );
+      nextGridRow = Math.floor(
+        (nextPos[1] + this.board.squareH / 2) / this.board.squareH
+      );
+    } else {
+      nextGridCol = Math.floor(
+        (nextPos[0] + this.board.squareW / 2) / this.board.squareW
+      );
+      nextGridRow = Math.floor(
+        (nextPos[1] + this.board.squareH / 2) / this.board.squareH
+      );
+    }
+
+    return [nextGridRow, nextGridCol];
+  }
+
+  getWarriorGridPos(dir, nextPos) {
+    let nextGridCol;
+    let nextGridRow;
+
+    if (dir[0] < 0 || dir[1] < 0) {
+      nextGridCol = Math.floor(
+        (nextPos[0] + this.board.squareW / 2) / this.board.squareW
+      );
+      nextGridRow = Math.floor(
+        (nextPos[1] + this.board.squareH / 2) / this.board.squareH
+      );
+    } else {
+      nextGridCol = Math.floor(
+        (nextPos[0] + this.board.squareW) / this.board.squareW
+      );
+      nextGridRow = Math.floor(
+        (nextPos[1] + this.board.squareH) / this.board.squareH
+      );
+    }
+
+    return [nextGridRow, nextGridCol];
   }
 }
 
@@ -429,6 +498,54 @@ class Chest {
 }
 
 module.exports = Chest;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+class Fireball {
+  constructor(ctx, pos, dir) {
+    this.ctx = ctx;
+    this.pos = pos;
+    this.width = 20;
+    this.height = 20;
+    this.dir = dir;
+    this.img = this.getImage(dir);
+  }
+
+  getImage(dir) {
+    switch (dir) {
+      case "right":
+        return document.getElementById("rightFireball");
+      case "left":
+        return document.getElementById("leftFireball");
+      case "up":
+        return document.getElementById("upFireball");
+      case "down":
+        return document.getElementById("downFireball");
+    }
+  }
+
+  draw() {
+    this.ctx.drawImage(
+      this.img,
+      this.pos[0],
+      this.pos[1],
+      this.width,
+      this.height
+    );
+  }
+}
+
+Fireball.MOVES = {
+  up: [0, -6],
+  left: [-6, 0],
+  down: [0, 6],
+  right: [6, 0]
+};
+
+module.exports = Fireball;
+
 
 /***/ })
 /******/ ]);
