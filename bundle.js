@@ -137,13 +137,13 @@ const Grids = {
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 4, 0, 1, 1, 1, 1, 1],
       [1, 0, 3, 0, 3, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 1, 3, 0, 3, 1],
-      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 4, 1, 4, 1, 1, 1],
+      [1, 0, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 4, 1, 4, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 1, 1, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 6, 1],
       [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 5, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -295,6 +295,7 @@ const Warrior = __webpack_require__(4);
 const Door = __webpack_require__(7);
 const Chest = __webpack_require__(8);
 const Fireball = __webpack_require__(9);
+const Ghost = __webpack_require__(10);
 
 class Game {
   constructor(ctx, board) {
@@ -303,6 +304,7 @@ class Game {
     this.keys = {};
     this.doors = {};
     this.fireballs = [];
+    this.ghosts = {};
     this.warrior = new Warrior(ctx, board);
     this.chest = new Chest(ctx, [0, 0]);
     this.warrior.reset();
@@ -325,6 +327,9 @@ class Game {
           this.doors[[eachRow, eachCol]] = door;
         } else if (row[eachCol] === 5) {
           this.chest.pos = pos;
+        } else if (row[eachCol] === 6) {
+          const ghost = new Ghost(this.ctx, pos);
+          this.ghosts[[eachRow, eachCol]] = ghost;
         }
       }
     }
@@ -333,6 +338,7 @@ class Game {
   drawObjects() {
     Object.values(this.keys).forEach(key => key.draw());
     Object.values(this.doors).forEach(door => door.draw());
+    Object.values(this.ghosts).forEach(ghost => ghost.draw());
     this.chest.draw();
     this.fireballs.forEach(fireball => fireball.draw());
   }
@@ -545,6 +551,32 @@ Fireball.MOVES = {
 };
 
 module.exports = Fireball;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+class Ghost {
+  constructor(ctx, pos) {
+    this.ctx = ctx;
+    this.pos = pos;
+    this.width = 40;
+    this.height = 40;
+    this.img = document.getElementById("leftGhost");
+  }
+  draw() {
+    this.ctx.drawImage(
+      this.img,
+      this.pos[0],
+      this.pos[1],
+      this.width,
+      this.height
+    );
+  }
+}
+
+module.exports = Ghost;
 
 
 /***/ })
