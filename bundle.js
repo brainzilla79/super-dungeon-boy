@@ -135,14 +135,14 @@ const Grids = {
   levelOne() {
     return [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-      [1, 0, 3, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 3, 0, 3, 1],
-      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 4, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 4, 0, 1, 1, 1, 1, 1],
+      [1, 0, 3, 0, 3, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 1, 3, 0, 3, 1],
+      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 4, 1, 4, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 1, 1, 4, 1, 1, 1, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -314,7 +314,6 @@ class Game {
           this.doors[[eachRow, eachCol]] = door;
         } else if (row[eachCol] === 5) {
           this.chest.pos = pos;
-          console.log(this.chest);
         }
       }
     }
@@ -360,7 +359,6 @@ class Game {
       this.warrior.keys += 1;
       this.board.grid[nextGridRow][nextGridCol] = 0;
       delete this.keys[[nextGridRow, nextGridCol]];
-      console.log(this.warrior.keys);
     } else if (
       this.board.grid[nextGridRow][nextGridCol] === 4 &&
       this.warrior.keys > 0
@@ -368,6 +366,8 @@ class Game {
       this.board.grid[nextGridRow][nextGridCol] = 0;
       delete this.doors[[nextGridRow, nextGridCol]];
       this.warrior.keys -= 1;
+    } else if (this.board.grid[nextGridRow][nextGridCol] === 5) {
+      this.chest.img = document.getElementById("chestOpen");
     } else if (
       this.board.grid[nextGridRow][nextGridCol] !== 1 &&
       this.board.grid[nextGridRow][nextGridCol] !== 4
