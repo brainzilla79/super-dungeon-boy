@@ -105,7 +105,7 @@ class Board {
   }
 
   draw() {
-    Util.colorRect(this.ctx, 0, 0, canvas.width, canvas.height, "#bec4ce");
+    Util.colorRect(this.ctx, 0, 0, 800, 600, "#bec4ce");
     for (let eachRow = 0; eachRow < this.rows; eachRow++) {
       const row = this.grid[eachRow];
       for (let eachCol = 0; eachCol < row.length; eachCol++) {
@@ -191,6 +191,7 @@ class Warrior {
     this.pos = [0, 0];
     this.width = 50;
     this.height = 50;
+    this.keys = 0;
     this.img = document.getElementById("warriorRight");
   }
 
@@ -288,7 +289,7 @@ class Game {
   constructor(ctx, board) {
     this.ctx = ctx;
     this.board = board;
-    this.keys = [];
+    this.keys = {};
     this.doors = [];
     this.warrior = new Warrior(ctx, board);
     this.warrior.reset();
@@ -305,7 +306,7 @@ class Game {
         ];
         if (row[eachCol] === 3) {
           const key = new Key(this.ctx, pos);
-          this.keys.push(key);
+          this.keys[[eachRow, eachCol]] = key;
         } else if (row[eachCol] === 4) {
           const door = new Door(this.ctx, pos);
           this.doors.push(door);
@@ -315,7 +316,7 @@ class Game {
   }
 
   drawKeysAndDoors() {
-    this.keys.forEach(key => key.draw());
+    Object.values(this.keys).forEach(key => key.draw());
     this.doors.forEach(door => door.draw());
   }
 
@@ -326,7 +327,7 @@ class Game {
     ];
     let nextGridCol;
     let nextGridRow;
-    
+
     if (dir[0] < 0) {
       this.warrior.img = document.getElementById("warriorLeft");
     } else if (dir[0] > 0) {
@@ -348,7 +349,18 @@ class Game {
       );
     }
 
-    if (
+    if (this.board.grid[nextGridRow][nextGridCol] === 3) {
+      this.warrior.pos = nextPos;
+      this.warrior.keys += 1;
+      this.board.grid[nextGridRow][nextGridCol] = 0;
+      delete this.keys[[nextGridRow, nextGridCol]];
+      console.log(this.warrior.keys);
+    } else if (
+      this.board.grid[nextGridRow][nextGridCol] === 4 &&
+      this.warrior.keys > 0
+    ) {
+      this.board.grid[nextGridRow][nextGridCol] = 0;
+    } else if (
       this.board.grid[nextGridRow][nextGridCol] !== 1 &&
       this.board.grid[nextGridRow][nextGridCol] !== 4
     ) {
@@ -360,7 +372,6 @@ class Game {
     this.board.draw();
     this.drawKeysAndDoors();
     this.warrior.draw();
-    // console.log(this.warrior.pos);
   }
 }
 
