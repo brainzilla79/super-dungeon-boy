@@ -1,0 +1,25 @@
+@font-face {
+  font-family: superNintendo;
+  src: url("./assets/SNES Italic.ttf");
+}
+
+h1 {
+  color: red;
+  font-family: superNintendo;
+  font-size: 44px;
+  margin: 0;
+}
+
+.title-container {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+body {
+  background: #000;
+}
+
+canvas {
+  margin: auto;
+  display: block;
+}

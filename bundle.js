@@ -196,6 +196,7 @@ class Warrior {
     this.img = document.getElementById("boy");
     this.imgX = 0;
     this.imgY = 0;
+    
   }
 
   reset() {
@@ -212,7 +213,6 @@ class Warrior {
   }
 
   draw() {
-
     this.ctx.drawImage( 
       this.img,
       this.imgX,
@@ -223,7 +223,6 @@ class Warrior {
       this.pos[1],
       this.width,
       this.height
-      
     );
   }
 }
@@ -391,7 +390,7 @@ class Game {
     const fireball = new Fireball(this.ctx, this.warrior.pos, dir);
     this.fireballs.push(fireball);
     const haduken = document.getElementById("haduken");
-    // haduken.play();
+    haduken.play();
   }
 
   moveFireball(fireball) {
