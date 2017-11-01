@@ -189,11 +189,13 @@ class Warrior {
     this.ctx = ctx;
     this.board = board;
     this.pos = [0, 0];
-    this.width = 50;
-    this.height = 50;
+    this.width = 40;
+    this.height = 60;
     this.keys = 0;
     this.dir = "right";
-    this.img = document.getElementById("warriorRight");
+    this.img = document.getElementById("boy");
+    this.imgX = 0;
+    this.imgY = 0;
   }
 
   reset() {
@@ -210,12 +212,32 @@ class Warrior {
   }
 
   draw() {
-    this.ctx.drawImage(
+    switch (this.dir) {
+      case "down":
+        this.imgY = 0;
+        break;
+      case "up":
+        this.imgY = 80;
+        break;
+      case "left":
+        this.imgY = 160;
+        break;
+      case "right":
+        this.imgY = 240;    
+        break;
+    }
+
+    this.ctx.drawImage( 
       this.img,
+      this.imgX,
+      this.imgY,
+      50,
+      80,
       this.pos[0],
       this.pos[1],
       this.width,
       this.height
+      
     );
   }
 }
@@ -349,12 +371,6 @@ class Game {
       this.warrior.pos[1] + dir[1]
     ];
 
-    if (dir[0] < 0) {
-      this.warrior.img = document.getElementById("warriorLeft");
-    } else if (dir[0] > 0) {
-      this.warrior.img = document.getElementById("warriorRight");
-    }
-
     const gridPos = this.getWarriorGridPos(dir, nextPos);
     const nextGridRow = gridPos[0];
     const nextGridCol = gridPos[1];
@@ -456,6 +472,7 @@ class Game {
     this.board.draw();
     this.drawObjects();
     this.warrior.draw();
+    
   }
 
   getFireballGridPos(dir, nextPos) {
