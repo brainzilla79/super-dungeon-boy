@@ -142,8 +142,8 @@ const Grids = {
       [1, 1, 1, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 6, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 6, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 5, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -329,7 +329,7 @@ class Game {
           this.chest.pos = pos;
         } else if (row[eachCol] === 6) {
           const ghost = new Ghost(this.ctx, pos);
-          this.ghosts[[eachRow, eachCol]] = ghost;
+          this.ghosts[pos] = ghost;
         }
       }
     }
@@ -384,6 +384,8 @@ class Game {
   fire(dir) {
     const fireball = new Fireball(this.ctx, this.warrior.pos, dir);
     this.fireballs.push(fireball);
+    const haduken = document.getElementById("haduken");
+    // haduken.play();
   }
 
   moveFireball(fireball) {
@@ -394,15 +396,60 @@ class Game {
     const nextGridRow = gridPos[0];
     const nextGridCol = gridPos[1];
 
-    if (this.board.grid[nextGridRow][nextGridCol] !== 1) {
+    if (
+      this.board.grid[nextGridRow][nextGridCol] !== 1 &&
+      this.board.grid[nextGridRow][nextGridCol] !== 4
+    ) {
       fireball.pos = nextPos;
     } else {
       this.fireballs.shift();
+    }
+
+    Object.values(this.ghosts).forEach(ghost => {
+      if (this.checkCollision(fireball, ghost)) {
+        delete this.ghosts[ghost.pos];
+        this.fireballs.shift();
+      }
+    });
+  }
+
+  checkCollision(object1, object2) {
+    if (
+      object1.pos[0] < object2.pos[0] + object2.width &&
+      object1.pos[0] + object1.width > object2.pos[0] &&
+      object1.pos[1] < object2.pos[1] + object2.height &&
+      object1.pos[1] + object1.height > object2.pos[1]
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  moveGhost(ghost) {
+    let dir = Ghost.MOVES[ghost.dir];
+    let nextPos = [ghost.pos[0] + dir[0], ghost.pos[1] + dir[1]];
+    const gridPos = this.getFireballGridPos(dir, nextPos);
+    const nextGridRow = gridPos[0];
+    const nextGridCol = gridPos[1];
+
+    if (this.board.grid[nextGridRow][nextGridCol] === 1) {
+      dir = [dir[0] * -1, dir[1] * -1];
+      nextPos = [ghost.pos[0] + dir[0], ghost.pos[1] + dir[1]];
+      ghost.toggleDir();
+    }
+    delete this.ghosts[ghost.pos];
+    this.ghosts[nextPos] = ghost;
+    ghost.pos = nextPos;
+
+    if (this.checkCollision(ghost, this.warrior)) {
+      console.log("game over!");
     }
   }
 
   moveObjects() {
     this.fireballs.forEach(fireball => this.moveFireball(fireball));
+    Object.values(this.ghosts).forEach(ghost => this.moveGhost(ghost));
   }
 
   render() {
@@ -563,8 +610,20 @@ class Ghost {
     this.pos = pos;
     this.width = 40;
     this.height = 40;
+    this.dir = "left";
     this.img = document.getElementById("leftGhost");
   }
+  
+  toggleDir() {
+    if (this.dir === "left") {
+      this.dir = "right";
+      this.img = document.getElementById("rightGhost"); 
+    } else {
+      this.dir = "left";
+      this.img = document.getElementById("leftGhost");
+    }
+  }
+
   draw() {
     this.ctx.drawImage(
       this.img,
@@ -575,6 +634,13 @@ class Ghost {
     );
   }
 }
+
+Ghost.MOVES = {
+  up: [0, -3],
+  left: [-3, 0],
+  down: [0, 3],
+  right: [3, 0]
+};
 
 module.exports = Ghost;
 
