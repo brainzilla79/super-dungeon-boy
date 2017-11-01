@@ -92,98 +92,6 @@ module.exports = Util;
 
 const Util = __webpack_require__(0);
 
-class Board {
-  constructor(ctx, squareW, squareH, grid) {
-    this.ctx = ctx;
-    this.squareW = squareW;
-    this.squareH = squareH;
-    this.grid = grid;
-    this.gap = 2;
-    this.cols = grid[0].length;
-    this.rows = grid.length;
-    this.img = document.getElementById("brick");
-  }
-
-  draw() {
-    Util.colorRect(this.ctx, 0, 0, 800, 600, "#bec4ce");
-    for (let eachRow = 0; eachRow < this.rows; eachRow++) {
-      const row = this.grid[eachRow];
-      for (let eachCol = 0; eachCol < row.length; eachCol++) {
-        if (row[eachCol] === 1) {
-          this.ctx.drawImage(
-            this.img,
-            this.squareW * eachCol,
-            this.squareH * eachRow,
-            this.squareW - 2,
-            this.squareH - this.gap
-          );
-          
-        }
-      }
-    }
-  }
-}
-
-module.exports = Board;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-const Grids = {
-  levelOne() {
-    return [
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 4, 0, 1, 1, 1, 1, 1],
-      [1, 0, 3, 0, 3, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 1, 3, 0, 3, 1],
-      [1, 0, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 4, 1, 4, 1, 1, 1],
-      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 1, 1, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 6, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 0, 0, 1],
-      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 5, 0, 1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    ];
-  }
-};
-
-module.exports = Grids;
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Util = __webpack_require__(0);
-
-class Key {
-  constructor(ctx, pos) {
-    this.pos = pos;
-    this.ctx = ctx;
-    this.img = document.getElementById("key");
-  }
-
-  draw() {
-    this.ctx.drawImage(this.img, this.pos[0], this.pos[1], 40, 40);
-    // Util.colorCircle(this.ctx, this.pos, 20, "#e8f442");
-  }
-}
-
-module.exports = Key;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Util = __webpack_require__(0);
-
 class Warrior {
   constructor(ctx, board) {
     this.ctx = ctx;
@@ -192,7 +100,7 @@ class Warrior {
     this.width = 40;
     this.height = 60;
     this.keys = 0;
-    this.dir = "right";
+    this.dir = "down";
     this.img = document.getElementById("boy");
     this.imgX = 0;
     this.imgY = 0;
@@ -238,75 +146,56 @@ module.exports = Warrior;
 
 
 /***/ }),
-/* 5 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Grids = __webpack_require__(2);
-const Board = __webpack_require__(1);
-const Warrior = __webpack_require__(4);
-const Game = __webpack_require__(6);
+const Util = __webpack_require__(0);
 
-document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
+class Board {
+  constructor(ctx, squareW, squareH, grid) {
+    this.ctx = ctx;
+    this.squareW = squareW;
+    this.squareH = squareH;
+    this.grid = grid;
+    this.gap = 2;
+    this.cols = grid[0].length;
+    this.rows = grid.length;
+    this.img = document.getElementById("brick");
+  }
 
-  const squareW = 40;
-  const squareH = 40;
-
-  const framesPerSecond = 60;
-
-  const boardGrid = Grids.levelOne();
-
-  const board = new Board(ctx, squareW, squareH, boardGrid);
-
-  const game = new Game(ctx, board);
-
-  const update = () => {
-    game.moveObjects();
-    game.render();
-  };
-
-  document.addEventListener("keydown", e => {
-    switch (e.keyCode) {
-      case 37:
-        game.move(Warrior.MOVES.left);
-        game.warrior.imgY = 160;
-        game.warrior.dir = "left";
-        break;
-        case 38:
-        game.move(Warrior.MOVES.up);
-        game.warrior.imgY = 80;
-        game.warrior.dir = "up";
-        break;
-        case 39:
-        game.move(Warrior.MOVES.right);
-        game.warrior.imgY = 240;
-        game.warrior.dir = "right";
-        break;
-        case 40:
-        game.move(Warrior.MOVES.down);
-        game.warrior.imgY = 0;
-        game.warrior.dir = "down";
-        break;
-      case 32: 
-        game.fire(game.warrior.dir);
-        break;
+  draw() {
+    Util.colorRect(this.ctx, 0, 0, 800, 600, "#bec4ce");
+    for (let eachRow = 0; eachRow < this.rows; eachRow++) {
+      const row = this.grid[eachRow];
+      for (let eachCol = 0; eachCol < row.length; eachCol++) {
+        if (row[eachCol] === 1) {
+          this.ctx.drawImage(
+            this.img,
+            this.squareW * eachCol,
+            this.squareH * eachRow,
+            this.squareW - 2,
+            this.squareH - this.gap
+          );
+          
+        }
+      }
     }
-  });
-  setInterval(update, 1000 / framesPerSecond);
-});
+  }
+}
+
+module.exports = Board;
 
 
 /***/ }),
-/* 6 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Key = __webpack_require__(3);
-const Warrior = __webpack_require__(4);
+const Key = __webpack_require__(10);
+const Warrior = __webpack_require__(1);
 const Door = __webpack_require__(7);
-const Chest = __webpack_require__(8);
-const Fireball = __webpack_require__(9);
-const Ghost = __webpack_require__(10);
+const Chest = __webpack_require__(6);
+const Fireball = __webpack_require__(8);
+const Ghost = __webpack_require__(9);
 
 class Game {
   constructor(ctx, board) {
@@ -515,26 +404,96 @@ module.exports = Game;
 
 
 /***/ }),
-/* 7 */
+/* 4 */
 /***/ (function(module, exports) {
 
-class Door {
-  constructor(ctx, pos) {
-    this.img = document.getElementById("door");
-    this.pos = pos;
-    this.ctx = ctx;
+const Grids = {
+  levelOne() {
+    return [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 4, 0, 1, 1, 1, 1, 1],
+      [1, 0, 3, 0, 3, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 1, 3, 0, 3, 1],
+      [1, 0, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 4, 1, 4, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 6, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 5, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ];
   }
+};
 
-  draw() {
-    this.ctx.drawImage(this.img, this.pos[0], this.pos[1], 40, 40);
-  }
-}
-
-module.exports = Door;
+module.exports = Grids;
 
 
 /***/ }),
-/* 8 */
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Grids = __webpack_require__(4);
+const Board = __webpack_require__(2);
+const Warrior = __webpack_require__(1);
+const Game = __webpack_require__(3);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  const squareW = 40;
+  const squareH = 40;
+
+  const framesPerSecond = 60;
+
+  const boardGrid = Grids.levelOne();
+
+  const board = new Board(ctx, squareW, squareH, boardGrid);
+
+  const game = new Game(ctx, board);
+
+  const update = () => {
+    game.moveObjects();
+    game.render();
+  };
+
+  document.addEventListener("keydown", e => {
+    switch (e.keyCode) {
+      case 37:
+        game.move(Warrior.MOVES.left);
+        game.warrior.imgY = 160;
+        game.warrior.dir = "left";
+        break;
+        case 38:
+        game.move(Warrior.MOVES.up);
+        game.warrior.imgY = 80;
+        game.warrior.dir = "up";
+        break;
+        case 39:
+        game.move(Warrior.MOVES.right);
+        game.warrior.imgY = 240;
+        game.warrior.dir = "right";
+        break;
+        case 40:
+        game.move(Warrior.MOVES.down);
+        game.warrior.imgY = 0;
+        game.warrior.dir = "down";
+        break;
+      case 32: 
+        game.fire(game.warrior.dir);
+        break;
+    }
+  });
+  setInterval(update, 1000 / framesPerSecond);
+});
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports) {
 
 class Chest {
@@ -559,7 +518,26 @@ class Chest {
 module.exports = Chest;
 
 /***/ }),
-/* 9 */
+/* 7 */
+/***/ (function(module, exports) {
+
+class Door {
+  constructor(ctx, pos) {
+    this.img = document.getElementById("door");
+    this.pos = pos;
+    this.ctx = ctx;
+  }
+
+  draw() {
+    this.ctx.drawImage(this.img, this.pos[0], this.pos[1], 40, 40);
+  }
+}
+
+module.exports = Door;
+
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports) {
 
 class Fireball {
@@ -607,7 +585,7 @@ module.exports = Fireball;
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports) {
 
 class Ghost {
@@ -649,6 +627,28 @@ Ghost.MOVES = {
 };
 
 module.exports = Ghost;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Util = __webpack_require__(0);
+
+class Key {
+  constructor(ctx, pos) {
+    this.pos = pos;
+    this.ctx = ctx;
+    this.img = document.getElementById("key");
+  }
+
+  draw() {
+    this.ctx.drawImage(this.img, this.pos[0], this.pos[1], 40, 40);
+    // Util.colorCircle(this.ctx, this.pos, 20, "#e8f442");
+  }
+}
+
+module.exports = Key;
 
 
 /***/ })
