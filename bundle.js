@@ -449,7 +449,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const squareH = 40;
 
   const framesPerSecond = 60;
-
   const boardGrid = Grids.levelOne();
 
   const board = new Board(ctx, squareW, squareH, boardGrid);
