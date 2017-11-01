@@ -212,20 +212,6 @@ class Warrior {
   }
 
   draw() {
-    switch (this.dir) {
-      case "down":
-        this.imgY = 0;
-        break;
-      case "up":
-        this.imgY = 80;
-        break;
-      case "left":
-        this.imgY = 160;
-        break;
-      case "right":
-        this.imgY = 240;    
-        break;
-    }
 
     this.ctx.drawImage( 
       this.img,
@@ -285,18 +271,22 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (e.keyCode) {
       case 37:
         game.move(Warrior.MOVES.left);
+        game.warrior.imgY = 160;
         game.warrior.dir = "left";
         break;
-      case 38:
+        case 38:
         game.move(Warrior.MOVES.up);
+        game.warrior.imgY = 80;
         game.warrior.dir = "up";
         break;
         case 39:
         game.move(Warrior.MOVES.right);
+        game.warrior.imgY = 240;
         game.warrior.dir = "right";
         break;
         case 40:
         game.move(Warrior.MOVES.down);
+        game.warrior.imgY = 0;
         game.warrior.dir = "down";
         break;
       case 32: 
