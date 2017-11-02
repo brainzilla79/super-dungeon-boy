@@ -91,6 +91,7 @@ module.exports = Util;
 /***/ (function(module, exports, __webpack_require__) {
 
 const Util = __webpack_require__(0);
+const Sprite = __webpack_require__(11);
 
 class Warrior {
   constructor(ctx, board) {
@@ -104,7 +105,7 @@ class Warrior {
     this.img = document.getElementById("boy");
     this.imgX = 0;
     this.imgY = 0;
-    
+    this.sprite = new Sprite(this.img, 200, 300, 4, 4, 4);
   }
 
   reset() {
@@ -121,12 +122,13 @@ class Warrior {
   }
 
   draw() {
+    // this.sprite.update(this.ctx, this.pos);
     this.ctx.drawImage( 
-      this.img,
-      this.imgX,
+      this.sprite.img,
+      this.sprite.x,
       this.imgY,
-      50,
-      80,
+      this.sprite.width,
+      this.sprite.height,
       this.pos[0],
       this.pos[1],
       this.width,
@@ -466,21 +468,25 @@ document.addEventListener("DOMContentLoaded", () => {
         game.move(Warrior.MOVES.left);
         game.warrior.imgY = 160;
         game.warrior.dir = "left";
+        game.warrior.sprite.update(ctx, game.warrior.pos);
         break;
         case 38:
         game.move(Warrior.MOVES.up);
         game.warrior.imgY = 80;
         game.warrior.dir = "up";
+        game.warrior.sprite.update(ctx, game.warrior.pos);
         break;
         case 39:
         game.move(Warrior.MOVES.right);
         game.warrior.imgY = 240;
         game.warrior.dir = "right";
+        game.warrior.sprite.update(ctx, game.warrior.pos);
         break;
         case 40:
         game.move(Warrior.MOVES.down);
         game.warrior.imgY = 0;
         game.warrior.dir = "down";
+        game.warrior.sprite.update(ctx, game.warrior.pos);
         break;
       case 32: 
         game.fire(game.warrior.dir);
@@ -649,6 +655,40 @@ class Key {
 
 module.exports = Key;
 
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+class Sprite {
+  constructor(img, imgWidth, imgHeight, rows, cols, frameCount){
+    this.img = img;
+    this.imgWidth = imgWidth;
+    this.imgHeight = imgHeight;
+    this.rows = rows;
+    this.cols = cols;
+    this.trackDown = 0;
+    this.trackUp = 1;
+    this.trackLeft = 2;
+    this.trackRight = 3;
+    this.width = imgWidth/cols;
+    this.height = imgHeight/rows;
+    this.currFrame = 0;
+    this.frameCount = frameCount;
+    this.speed = 1000;
+    this.tickCount = 0;
+    this.x = 0;
+    this.y = 0;
+  }
+
+  update(ctx, pos) {
+    this.currFrame = ++this.currFrame % this.frameCount;
+    this.x = this.currFrame * this.width;
+    // ctx.clearRect(pos[0], pos[1], this.width, this.height);
+  }
+}
+
+module.exports = Sprite;
 
 /***/ })
 /******/ ]);
