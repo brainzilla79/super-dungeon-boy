@@ -279,7 +279,7 @@ class Game {
     const fireball = new Fireball(this.ctx, this.warrior.pos, dir);
     this.fireballs.push(fireball);
     const haduken = document.getElementById("haduken");
-    haduken.play();
+    // haduken.play();
   }
 
   moveFireball(fireball) {
