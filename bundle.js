@@ -164,7 +164,7 @@ class Board {
   }
 
   draw() {
-    Util.colorRect(this.ctx, 0, 0, 800, 600, "#bec4ce");
+    Util.colorRect(this.ctx, 0, 0, 798, 598, "#bec4ce");
     for (let eachRow = 0; eachRow < this.rows; eachRow++) {
       const row = this.grid[eachRow];
       for (let eachCol = 0; eachCol < row.length; eachCol++) {
