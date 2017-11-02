@@ -261,21 +261,29 @@ class Game {
       this.board.grid[nextGridRow][nextGridCol] === 4 &&
       this.warrior.keys > 0
     ) {
-      this.board.grid[nextGridRow][nextGridCol] = 0;
-      delete this.doors[[nextGridRow, nextGridCol]];
-      this.warrior.keys -= 1;
-      const doorSound = document.getElementById("doorSound");
-      doorSound.play();
+      this.openDoor(nextGridRow, nextGridCol);
     } else if (this.board.grid[nextGridRow][nextGridCol] === 5) {
-      this.chest.img = document.getElementById("chestOpen");
-      const fanfare = document.getElementById("fanfare");
-      fanfare.play();
+      this.gameWon();
     } else if (
       this.board.grid[nextGridRow][nextGridCol] !== 1 &&
       this.board.grid[nextGridRow][nextGridCol] !== 4
     ) {
       this.warrior.pos = nextPos;
     }
+  }
+  
+  gameWon(nextGridRow, nextGridCol) {
+    this.chest.img = document.getElementById("chestOpen");
+    const fanfare = document.getElementById("fanfare");
+    fanfare.play();
+  }
+
+  openDoor(nextGridRow, nextGridCol) {
+    this.board.grid[nextGridRow][nextGridCol] = 0;
+    delete this.doors[[nextGridRow, nextGridCol]];
+    this.warrior.keys -= 1;
+    const doorSound = document.getElementById("doorSound");
+    doorSound.play();
   }
 
   pickupKey(nextPos, nextGridRow, nextGridCol) {
