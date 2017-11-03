@@ -180,10 +180,32 @@ class Board {
             this.squareW - 2,
             this.squareH - this.gap
           );
-          
         }
       }
     }
+  }
+
+  getGridPos(dir, nextPos) {
+    let nextGridCol;
+    let nextGridRow;
+
+    if (dir[0] < 0 || dir[1] < 0) {
+      nextGridCol = Math.floor(
+        (nextPos[0] + this.squareW / 2) / this.squareW
+      );
+      nextGridRow = Math.floor(
+        (nextPos[1] + this.squareH / 2) / this.squareH
+      );
+    } else {
+      nextGridCol = Math.floor(
+        (nextPos[0] + this.squareW / 2) / this.squareW
+      );
+      nextGridRow = Math.floor(
+        (nextPos[1] + this.squareH / 2) / this.squareH
+      );
+    }
+
+    return [nextGridRow, nextGridCol];
   }
 }
 
@@ -245,7 +267,7 @@ class Game {
       this.warrior.pos[1] + dir[1]
     ];
 
-    const gridPos = this.getGridPos(dir, nextPos);
+    const gridPos = this.board.getGridPos(dir, nextPos);
     const nextGridRow = gridPos[0];
     const nextGridCol = gridPos[1];
 
@@ -300,7 +322,7 @@ class Game {
     const dir = Fireball.MOVES[fireball.dir];
     const nextPos = [fireball.pos[0] + dir[0], fireball.pos[1] + dir[1]];
 
-    const gridPos = this.getGridPos(dir, nextPos);
+    const gridPos = this.board.getGridPos(dir, nextPos);
     const nextGridRow = gridPos[0];
     const nextGridCol = gridPos[1];
 
@@ -339,7 +361,7 @@ class Game {
   moveGhost(ghost) {
     let dir = Ghost.MOVES[ghost.dir];
     let nextPos = [ghost.pos[0] + dir[0], ghost.pos[1] + dir[1]];
-    const gridPos = this.getGridPos(dir, nextPos);
+    const gridPos = this.board.getGridPos(dir, nextPos);
     const nextGridRow = gridPos[0];
     const nextGridCol = gridPos[1];
 
@@ -370,29 +392,6 @@ class Game {
     this.chest.draw();
     this.fireballs.forEach(fireball => fireball.draw());
     this.warrior.draw();
-  }
-
-  getGridPos(dir, nextPos) {
-    let nextGridCol;
-    let nextGridRow;
-
-    if (dir[0] < 0 || dir[1] < 0) {
-      nextGridCol = Math.floor(
-        (nextPos[0] + this.board.squareW / 2) / this.board.squareW
-      );
-      nextGridRow = Math.floor(
-        (nextPos[1] + this.board.squareH / 2) / this.board.squareH
-      );
-    } else {
-      nextGridCol = Math.floor(
-        (nextPos[0] + this.board.squareW / 2) / this.board.squareW
-      );
-      nextGridRow = Math.floor(
-        (nextPos[1] + this.board.squareH / 2) / this.board.squareH
-      );
-    }
-
-    return [nextGridRow, nextGridCol];
   }
 
 }
@@ -435,7 +434,6 @@ module.exports = Grids;
 
 const Grids = __webpack_require__(4);
 const Board = __webpack_require__(2);
-const Warrior = __webpack_require__(1);
 const Game = __webpack_require__(3);
 const GameView = __webpack_require__(12);
 
@@ -449,7 +447,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const game = new Game(ctx, board);
   new GameView(ctx, game).start();
-
 });
 
 
