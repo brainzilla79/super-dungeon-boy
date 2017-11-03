@@ -443,13 +443,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
 
-  const framesPerSecond = 60;
   const boardGrid = Grids.levelOne();
 
   const board = new Board(ctx, boardGrid);
 
   const game = new Game(ctx, board);
-  console.log(game);
   new GameView(ctx, game).start();
 
 });
@@ -679,7 +677,6 @@ class GameView {
   }
 
   update() {
-    // console.log(this.game);
     this.game.moveObjects();
     this.game.render();
   }
