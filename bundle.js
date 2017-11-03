@@ -103,9 +103,13 @@ class Warrior {
     this.keys = 0;
     this.dir = "down";
     this.img = document.getElementById("boy");
-    this.imgX = 0;
-    this.imgY = 0;
     this.sprite = new Sprite(this.img, 200, 300, 4, 4, 4);
+  }
+
+  animate(imgY, dir) {
+    this.sprite.y = imgY;
+    this.dir = dir;
+    this.sprite.update(this.ctx, this.pos);
   }
 
   reset() {
@@ -122,11 +126,10 @@ class Warrior {
   }
 
   draw() {
-    // this.sprite.update(this.ctx, this.pos);
     this.ctx.drawImage( 
       this.sprite.img,
       this.sprite.x,
-      this.imgY,
+      this.sprite.y,
       this.sprite.width,
       this.sprite.height,
       this.pos[0],
@@ -271,7 +274,7 @@ class Game {
       this.warrior.pos = nextPos;
     }
   }
-  
+
   gameWon(nextGridRow, nextGridCol) {
     this.chest.img = document.getElementById("chestOpen");
     const fanfare = document.getElementById("fanfare");
@@ -372,7 +375,6 @@ class Game {
     this.board.draw();
     this.drawObjects();
     this.warrior.draw();
-    
   }
 
   getFireballGridPos(dir, nextPos) {
@@ -486,29 +488,21 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (e.keyCode) {
       case 37:
         game.move(Warrior.MOVES.left);
-        game.warrior.imgY = 160;
-        game.warrior.dir = "left";
-        game.warrior.sprite.update(ctx, game.warrior.pos);
+        game.warrior.animate(160, "left");
         break;
-        case 38:
+      case 38:
         game.move(Warrior.MOVES.up);
-        game.warrior.imgY = 80;
-        game.warrior.dir = "up";
-        game.warrior.sprite.update(ctx, game.warrior.pos);
+        game.warrior.animate(80, "up");
         break;
-        case 39:
+      case 39:
         game.move(Warrior.MOVES.right);
-        game.warrior.imgY = 240;
-        game.warrior.dir = "right";
-        game.warrior.sprite.update(ctx, game.warrior.pos);
+        game.warrior.animate(240, "right");
         break;
-        case 40:
+      case 40:
         game.move(Warrior.MOVES.down);
-        game.warrior.imgY = 0;
-        game.warrior.dir = "down";
-        game.warrior.sprite.update(ctx, game.warrior.pos);
+        game.warrior.animate(0, "down");
         break;
-      case 32: 
+      case 32:
         game.fire(game.warrior.dir);
         break;
     }
@@ -683,20 +677,10 @@ module.exports = Key;
 class Sprite {
   constructor(img, imgWidth, imgHeight, rows, cols, frameCount){
     this.img = img;
-    this.imgWidth = imgWidth;
-    this.imgHeight = imgHeight;
-    this.rows = rows;
-    this.cols = cols;
-    this.trackDown = 0;
-    this.trackUp = 1;
-    this.trackLeft = 2;
-    this.trackRight = 3;
     this.width = imgWidth/cols;
     this.height = imgHeight/rows;
     this.currFrame = 0;
     this.frameCount = frameCount;
-    this.speed = 1000;
-    this.tickCount = 0;
     this.x = 0;
     this.y = 0;
   }
