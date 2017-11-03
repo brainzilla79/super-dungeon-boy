@@ -106,27 +106,26 @@ class Warrior {
     this.sprite = new Sprite(this.img, 200, 300, 4, 4, 4);
   }
 
-  animate(imgY, dir) {
-    this.sprite.y = imgY;
-    this.dir = dir;
-    this.sprite.update(this.ctx, this.pos);
-  }
-
   reset() {
     for (let eachRow = 0; eachRow < this.board.grid.length; eachRow++) {
       const row = this.board.grid[eachRow];
       for (let eachCol = 0; eachCol < row.length; eachCol++) {
         if (row[eachCol] === 2) {
           row[eachCol] = 0;
-          this.pos[0] = eachCol * this.board.squareW + this.board.squareW / 2;
-          this.pos[1] = eachRow * this.board.squareH + this.board.squareH / 2;
+          this.pos[0] = eachCol * this.board.squareW;
+          this.pos[1] = eachRow * this.board.squareH;
         }
       }
     }
   }
 
+  animate(imgY, dir) {
+    this.dir = dir;
+    this.sprite.update(this.ctx, this.pos, imgY);
+  }
+
   draw() {
-    this.ctx.drawImage( 
+    this.ctx.drawImage(
       this.sprite.img,
       this.sprite.x,
       this.sprite.y,
@@ -240,21 +239,13 @@ class Game {
     }
   }
 
-  drawObjects() {
-    Object.values(this.keys).forEach(key => key.draw());
-    Object.values(this.doors).forEach(door => door.draw());
-    Object.values(this.ghosts).forEach(ghost => ghost.draw());
-    this.chest.draw();
-    this.fireballs.forEach(fireball => fireball.draw());
-  }
-
   move(dir) {
     const nextPos = [
       this.warrior.pos[0] + dir[0],
       this.warrior.pos[1] + dir[1]
     ];
 
-    const gridPos = this.getWarriorGridPos(dir, nextPos);
+    const gridPos = this.getGridPos(dir, nextPos);
     const nextGridRow = gridPos[0];
     const nextGridCol = gridPos[1];
 
@@ -309,7 +300,7 @@ class Game {
     const dir = Fireball.MOVES[fireball.dir];
     const nextPos = [fireball.pos[0] + dir[0], fireball.pos[1] + dir[1]];
 
-    const gridPos = this.getFireballGridPos(dir, nextPos);
+    const gridPos = this.getGridPos(dir, nextPos);
     const nextGridRow = gridPos[0];
     const nextGridCol = gridPos[1];
 
@@ -348,7 +339,7 @@ class Game {
   moveGhost(ghost) {
     let dir = Ghost.MOVES[ghost.dir];
     let nextPos = [ghost.pos[0] + dir[0], ghost.pos[1] + dir[1]];
-    const gridPos = this.getFireballGridPos(dir, nextPos);
+    const gridPos = this.getGridPos(dir, nextPos);
     const nextGridRow = gridPos[0];
     const nextGridCol = gridPos[1];
 
@@ -373,11 +364,15 @@ class Game {
 
   render() {
     this.board.draw();
-    this.drawObjects();
+    Object.values(this.keys).forEach(key => key.draw());
+    Object.values(this.doors).forEach(door => door.draw());
+    Object.values(this.ghosts).forEach(ghost => ghost.draw());
+    this.chest.draw();
+    this.fireballs.forEach(fireball => fireball.draw());
     this.warrior.draw();
   }
 
-  getFireballGridPos(dir, nextPos) {
+  getGridPos(dir, nextPos) {
     let nextGridCol;
     let nextGridRow;
 
@@ -400,28 +395,6 @@ class Game {
     return [nextGridRow, nextGridCol];
   }
 
-  getWarriorGridPos(dir, nextPos) {
-    let nextGridCol;
-    let nextGridRow;
-
-    if (dir[0] < 0 || dir[1] < 0) {
-      nextGridCol = Math.floor(
-        (nextPos[0] + this.board.squareW / 2) / this.board.squareW
-      );
-      nextGridRow = Math.floor(
-        (nextPos[1] + this.board.squareH / 2) / this.board.squareH
-      );
-    } else {
-      nextGridCol = Math.floor(
-        (nextPos[0] + this.board.squareW) / this.board.squareW
-      );
-      nextGridRow = Math.floor(
-        (nextPos[1] + this.board.squareH) / this.board.squareH
-      );
-    }
-
-    return [nextGridRow, nextGridCol];
-  }
 }
 
 module.exports = Game;
@@ -675,24 +648,25 @@ module.exports = Key;
 /***/ (function(module, exports) {
 
 class Sprite {
-  constructor(img, imgWidth, imgHeight, rows, cols, frameCount){
+  constructor(img, imgWidth, imgHeight, rows, cols, frameCount) {
     this.img = img;
-    this.width = imgWidth/cols;
-    this.height = imgHeight/rows;
+    this.width = imgWidth / cols;
+    this.height = imgHeight / rows;
     this.currFrame = 0;
     this.frameCount = frameCount;
     this.x = 0;
     this.y = 0;
   }
 
-  update(ctx, pos) {
+  update(ctx, pos, y) {
     this.currFrame = ++this.currFrame % this.frameCount;
     this.x = this.currFrame * this.width;
-    // ctx.clearRect(pos[0], pos[1], this.width, this.height);
+    this.y = y;
   }
 }
 
 module.exports = Sprite;
+
 
 /***/ })
 /******/ ]);
