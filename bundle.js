@@ -190,19 +190,11 @@ class Board {
     let nextGridRow;
 
     if (dir[0] < 0 || dir[1] < 0) {
-      nextGridCol = Math.floor(
-        (nextPos[0] + this.squareW / 2) / this.squareW
-      );
-      nextGridRow = Math.floor(
-        (nextPos[1] + this.squareH / 2) / this.squareH
-      );
+      nextGridCol = Math.floor((nextPos[0] + this.squareW / 2) / this.squareW);
+      nextGridRow = Math.floor((nextPos[1] + this.squareH / 2) / this.squareH);
     } else {
-      nextGridCol = Math.floor(
-        (nextPos[0] + this.squareW / 2) / this.squareW
-      );
-      nextGridRow = Math.floor(
-        (nextPos[1] + this.squareH / 2) / this.squareH
-      );
+      nextGridCol = Math.floor((nextPos[0] + this.squareW / 2) / this.squareW);
+      nextGridRow = Math.floor((nextPos[1] + this.squareH / 2) / this.squareH);
     }
 
     return [nextGridRow, nextGridCol];
@@ -393,7 +385,6 @@ class Game {
     this.fireballs.forEach(fireball => fireball.draw());
     this.warrior.draw();
   }
-
 }
 
 module.exports = Game;
