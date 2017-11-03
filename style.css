@@ -37,10 +37,10 @@ h1 {
 }
 
 .splash-boy {
-  width: 100px;
-  height: 125px;
+  width: 200px;
+  height: 225px;
   background-image: url("./assets/dungeo_boy_splash.png");
-  background-size: 100px 150px;
+  background-size: 200px 275px;
   background-repeat: no-repeat; 
 }
 
