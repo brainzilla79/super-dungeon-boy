@@ -156,10 +156,10 @@ module.exports = Warrior;
 const Util = __webpack_require__(0);
 
 class Board {
-  constructor(ctx, squareW, squareH, grid) {
+  constructor(ctx, grid) {
     this.ctx = ctx;
-    this.squareW = squareW;
-    this.squareH = squareH;
+    this.squareW = 40;
+    this.squareH = 40;
     this.grid = grid;
     this.gap = 2;
     this.cols = grid[0].length;
@@ -442,13 +442,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
 
-  const squareW = 40;
-  const squareH = 40;
-
   const framesPerSecond = 60;
   const boardGrid = Grids.levelOne();
 
-  const board = new Board(ctx, squareW, squareH, boardGrid);
+  const board = new Board(ctx, boardGrid);
 
   const game = new Game(ctx, board);
 
