@@ -20,6 +20,29 @@ h1 {
   justify-content: space-between;
 }
 
+.game-container {
+  margin: auto;
+  position: relative;
+  width: 800px;
+}
+
+/* .splash-screen {
+  position: absolute;
+  top: 0;
+  background-image: url("./assets/bricksx64.png");
+  background-repeat: repeat;
+  width: 800px;
+  height: 600px;
+}
+
+.splash-boy {
+  width: 200px;
+  height: 225px;
+  background-image: url("./assets/dungeo_boy_splash.png");
+  background-size: 200px 275px;
+  background-repeat: no-repeat; 
+} */
+
 body {
   background: #000;
 }
@@ -54,7 +77,7 @@ canvas {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #76D645;
   -webkit-transition: 0.4s;
   transition: 0.4s;
   /* border-radius: 34px; */
@@ -74,11 +97,11 @@ canvas {
 }
 
 input:checked + .slider {
-  background-color: #2196f3;
+  background-color: #ccc;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
+  box-shadow: 0 0 1px #ccc;
 }
 
 input:checked + .slider:before {
