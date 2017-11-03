@@ -164,25 +164,21 @@ class Board {
     this.gap = 2;
     this.cols = grid[0].length;
     this.rows = grid.length;
+    this.bricks = [];
     this.img = document.getElementById("brick");
   }
 
   draw() {
     Util.colorRect(this.ctx, 0, 0, 798, 598, "#bec4ce");
-    for (let eachRow = 0; eachRow < this.rows; eachRow++) {
-      const row = this.grid[eachRow];
-      for (let eachCol = 0; eachCol < row.length; eachCol++) {
-        if (row[eachCol] === 1) {
-          this.ctx.drawImage(
-            this.img,
-            this.squareW * eachCol,
-            this.squareH * eachRow,
-            this.squareW - 2,
-            this.squareH - this.gap
-          );
-        }
-      }
-    }
+    this.bricks.forEach( brick => {
+      this.ctx.drawImage(
+        this.img,
+        brick[0],
+        brick[1],
+        this.squareW - 2,
+        this.squareH - this.gap
+      );
+    });
   }
 
   getGridPos(dir, nextPos) {
@@ -237,7 +233,9 @@ class Game {
           eachCol * this.board.squareW,
           eachRow * this.board.squareH
         ];
-        if (row[eachCol] === 3) {
+        if (row[eachCol] === 1) {
+          this.board.bricks.push(pos);
+        } else if (row[eachCol] === 3) {
           const key = new Key(this.ctx, pos);
           this.keys[[eachRow, eachCol]] = key;
         } else if (row[eachCol] === 4) {
@@ -666,20 +664,14 @@ class GameView {
     });
   }
 
-  muteSound() {
-    this.sounds.forEach(sound => {
-      sound.muted = true;
-    });
-  }
-
-  unmuteSound() {
-    this.sounds.forEach(sound => {
-      sound.muted = false;
+  checkSoundToggle() {
+    this.sounds.forEach( sound => {
+      this.soundToggle.checked === true ? sound.muted = true : sound.muted = false;
     });
   }
 
   update() {
-    this.soundToggle.checked === true ? this.muteSound() : this.unmuteSound();
+    this.checkSoundToggle();
     this.game.moveObjects();
     this.game.render();
   }
