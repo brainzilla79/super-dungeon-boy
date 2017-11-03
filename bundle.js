@@ -677,6 +677,15 @@ class GameView {
   }
 
   start() {
+    const splashScreen = document.getElementById("splashScreen");
+    const playButton = document.getElementById("playButton");
+    playButton.addEventListener("click", () => {
+      splashScreen.classList.add("hide");
+      this.play();
+    });
+  }
+
+  play() {
     this.bindKeyHandlers();
     setInterval(this.update, 1000 / this.framesPerSecond);
   }

@@ -3,7 +3,14 @@
   src: url("./assets/SNES Italic.ttf");
 }
 
-p { color: #fff; }
+@font-face {
+  font-family: pressStart;
+  src: url("./assets/PressStart2P.ttf");
+}
+
+p {
+  color: #fff;
+}
 
 h1 {
   color: red;
@@ -29,19 +36,31 @@ h1 {
 .splash-screen {
   position: absolute;
   top: 0;
-  /* background: black; */
   background-image: url("./assets/bricksx64.png");
   background-repeat: repeat;
   width: 800px;
   height: 600px;
 }
 
-.splash-boy {
-  width: 200px;
-  height: 225px;
-  background-image: url("./assets/dungeo_boy_splash.png");
-  background-size: 200px 275px;
-  background-repeat: no-repeat; 
+.hide {
+  display: none;
+}
+
+#playButton {
+  top: 240px;
+  right: 35%;
+  position: absolute;
+  color: #0A5DE2;
+  font-family: pressStart;
+  font-size: 44px;
+  border: 2px solid white;
+  padding: 30px;
+  background: #000000;
+}
+
+#playButton:hover {
+  cursor: pointer;
+  color: #76d645;
 }
 
 body {
@@ -78,7 +97,7 @@ canvas {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #76D645;
+  background-color: #76d645;
   -webkit-transition: 0.4s;
   transition: 0.4s;
   /* border-radius: 34px; */
@@ -110,4 +129,3 @@ input:checked + .slider:before {
   -ms-transform: translateX(26px);
   transform: translateX(26px);
 }
-
