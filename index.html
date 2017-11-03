@@ -1,50 +1,60 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="./style.css">
-    <title>Super Dungeon Boy</title>
-  </head>
-  <body>
-    <div class="title-container">
-      <h1>SUPER DUNGEON BOY</h1>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./style.css">
+  <title>Super Dungeon Boy</title>
+</head>
+
+<body>
+  <div class="header">
+    <h1>SUPER DUNGEON BOY</h1>
+    <div class="sound-control">
+      <p>Sound On/Off</p>
+      <label class="switch">
+        <input id="soundToggle" type="checkbox">
+        <span class="slider"></span>
+      </label>
     </div>
-    <div class="game-container">
-      <canvas id="canvas" width="800" height="600">
-        <p>Your browser does not support HTML5</p>
-      </canvas>
-      <div class="splash-screen"></div>
-    </div>
-    <div style="display: none">
-      <img id="brick" src="./assets/bricksx64.png">
-      <img id="key" src="./assets/pixel_key.png">
-      <img id="door" src="./assets/door.png">
-      <img id="chestClosed" src="./assets/closed_pixel_chest.png">
-      <img id="chestOpen" src="./assets/open_pixel_chest.png">
-      <img id="leftFireball" src="./assets/left_fireball.png">
-      <img id="rightFireball" src="./assets/right_fireball.png">
-      <img id="upFireball" src="./assets/up_fireball.png">
-      <img id="downFireball" src="./assets/down_fireball.png">
-      <img id="leftGhost" src="./assets/left_ghost.png">
-      <img id="rightGhost" src="./assets/right_ghost.png">
-      <img id="boy" src="./assets/boy.png">
-      <audio id="fanfare">
-        <source src="./assets/LOZ_Fanfare.wav">
-      </audio>
-      <audio id="enemyKill">
-        <source src="./assets/LTTP_Enemy_Kill.wav">
-      </audio>
-      <audio id="doorSound">
-        <source src="./assets/smw_door_opens.wav">
-      </audio>
-      <audio id="keySound">
-        <source src="./assets/smb_coin.wav" type="audio/wav">
-      </audio>
-      <audio id="haduken">
-        <source src="./assets/hadouryu.wav" type="audio/wav">
-      </audio>
-    </div>
-    <script type="application/javascript" src="vendor/keymaster.js"></script>
-    <script src="bundle.js" charset="utf-8"></script>
-  </body>
+  </div>
+  <div class="game-container">
+    <canvas id="canvas" width="800" height="600">
+      <p>Your browser does not support HTML5</p>
+    </canvas>
+    <div class="splash-screen"></div>
+  </div>
+  <div style="display: none">
+    <img id="brick" src="./assets/bricksx64.png">
+    <img id="key" src="./assets/pixel_key.png">
+    <img id="door" src="./assets/door.png">
+    <img id="chestClosed" src="./assets/closed_pixel_chest.png">
+    <img id="chestOpen" src="./assets/open_pixel_chest.png">
+    <img id="leftFireball" src="./assets/left_fireball.png">
+    <img id="rightFireball" src="./assets/right_fireball.png">
+    <img id="upFireball" src="./assets/up_fireball.png">
+    <img id="downFireball" src="./assets/down_fireball.png">
+    <img id="leftGhost" src="./assets/left_ghost.png">
+    <img id="rightGhost" src="./assets/right_ghost.png">
+    <img id="boy" src="./assets/boy.png">
+    <audio id="fanfare">
+      <source src="./assets/LOZ_Fanfare.wav">
+    </audio>
+    <audio id="enemyKill">
+      <source src="./assets/LTTP_Enemy_Kill.wav">
+    </audio>
+    <audio id="doorSound">
+      <source src="./assets/smw_door_opens.wav">
+    </audio>
+    <audio id="keySound">
+      <source src="./assets/smb_coin.wav" type="audio/wav">
+    </audio>
+    <audio id="haduken">
+      <source src="./assets/hadouryu.wav" type="audio/wav">
+    </audio>
+  </div>
+  <script type="application/javascript" src="vendor/keymaster.js"></script>
+  <script src="bundle.js" charset="utf-8"></script>
+</body>
+
 </html>

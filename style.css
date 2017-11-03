@@ -3,6 +3,8 @@
   src: url("./assets/SNES Italic.ttf");
 }
 
+p { color: #fff; }
+
 h1 {
   color: red;
   font-family: superNintendo;
@@ -10,9 +12,12 @@ h1 {
   margin: 0;
 }
 
-.title-container {
-  text-align: center;
+.header {
+  width: 800px;
+  margin: auto;
   margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
 }
 
 body {
@@ -23,3 +28,62 @@ canvas {
   margin: auto;
   display: block;
 }
+
+.sound-control {
+  display: flex;
+  flex-direction: row;
+}
+
+.switch {
+  margin-left: 10px;
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-top: 10px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  /* border-radius: 34px; */
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  /* border-radius: 50%; */
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+

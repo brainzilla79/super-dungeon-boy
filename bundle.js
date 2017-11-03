@@ -634,6 +634,8 @@ class GameView {
     this.ctx = ctx;
     this.game = game;
     this.framesPerSecond = 60;
+    this.sounds = document.querySelectorAll("audio");
+    this.soundToggle = document.getElementById("soundToggle");
     this.update = this.update.bind(this);
     this.bindKeyHandlers = this.bindKeyHandlers.bind(this);
   }
@@ -664,7 +666,20 @@ class GameView {
     });
   }
 
+  muteSound() {
+    this.sounds.forEach(sound => {
+      sound.muted = true;
+    });
+  }
+
+  unmuteSound() {
+    this.sounds.forEach(sound => {
+      sound.muted = false;
+    });
+  }
+
   update() {
+    this.soundToggle.checked === true ? this.muteSound() : this.unmuteSound();
     this.game.moveObjects();
     this.game.render();
   }
