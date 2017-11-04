@@ -224,8 +224,17 @@ class Game {
     this.warrior = new Warrior(ctx, this.board);
     this.chest = new Chest(ctx, [0, 0]);
     this.intervalId = undefined;
+    this.gameplaySong = document.getElementById("gameplaySong");
+    this.playSong();
     this.warrior.reset();
     this.addObjects();
+  }
+
+  playSong() {
+    this.gameplaySong.currentTime = 0;
+    this.gameplaySong.loop = true;
+    this.gameplaySong.volume = 0.3;
+    this.gameplaySong.play();
   }
 
   addObjects() {
@@ -378,6 +387,7 @@ class Game {
   }
 
   gameOver(result) {
+    this.gameplaySong.pause();
     let sound;
     let msg;
     let btnMsg;
@@ -654,6 +664,7 @@ class GameView {
     this.ctx = ctx;
     this.game = undefined;
     this.framesPerSecond = 60;
+    this.menuSong = document.getElementById("menuSong");
     this.sounds = document.querySelectorAll("audio");
     this.soundToggle = document.getElementById("soundToggle");
     this.update = this.update.bind(this);
@@ -708,10 +719,14 @@ class GameView {
 
   start() {
     this.bindKeyHandlers();
+    this.menuSong.loop = true;
+    this.menuSong.volume = 0.5;
+    this.menuSong.play();
     const splashScreen = document.getElementById("splashScreen");
     const playButton = document.getElementById("playButton");
     playButton.addEventListener("click", () => {
       splashScreen.classList.add("hide");
+      this.menuSong.pause();
       this.play();
     });
   }
