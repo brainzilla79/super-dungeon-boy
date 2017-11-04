@@ -380,18 +380,22 @@ class Game {
   gameOver(result) {
     let sound;
     let msg;
+    let btnMsg;
 
     if (result === "win") {
       sound = "fanfare";
       msg = "You Win";
+      btnMsg = "Play Again"
     } else if (result === "lose") {
       sound = "death";
       msg = "Game Over";
+      btnMsg = "Try Again"
     }
     this.playSound(sound);
     clearInterval(this.intervalId);
     document.getElementById("gameOverScreen").classList.remove("hide");
     document.getElementById("gameOverMsg").innerHTML = msg;
+    document.getElementById("restartBtn").innerHTML = btnMsg;
   }
 
   moveObjects() {

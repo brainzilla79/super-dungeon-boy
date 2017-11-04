@@ -236,6 +236,10 @@ input:checked + .slider:before {
 }
 
 .footer {
+  font-family: "Helvetica Neue",
+  Helvetica,
+  Arial,
+  sans-serif;
   margin: auto;
   margin-top: 5px;
   width: 800px;
