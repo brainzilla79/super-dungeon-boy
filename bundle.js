@@ -427,7 +427,7 @@ const Game = __webpack_require__(3);
 const GameView = __webpack_require__(12);
 
 document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("canvas");
+  const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
   const boardGrid = Grids.levelOne();
