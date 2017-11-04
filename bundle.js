@@ -591,7 +591,6 @@ class Key {
 
   draw() {
     this.ctx.drawImage(this.img, this.pos[0], this.pos[1], 40, 40);
-    // Util.colorCircle(this.ctx, this.pos, 20, "#e8f442");
   }
 }
 
