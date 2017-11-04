@@ -210,17 +210,20 @@ const Door = __webpack_require__(7);
 const Chest = __webpack_require__(6);
 const Fireball = __webpack_require__(8);
 const Ghost = __webpack_require__(9);
+const Grids = __webpack_require__(4);
+const Board = __webpack_require__(2);
 
 class Game {
-  constructor(ctx, board) {
+  constructor(ctx) {
     this.ctx = ctx;
-    this.board = board;
+    this.board = new Board(ctx, Grids.levelOne());
     this.keys = {};
     this.doors = {};
     this.fireballs = [];
     this.ghosts = {};
-    this.warrior = new Warrior(ctx, board);
+    this.warrior = new Warrior(ctx, this.board);
     this.chest = new Chest(ctx, [0, 0]);
+    this.intervalId = undefined;
     this.warrior.reset();
     this.addObjects();
   }
@@ -269,7 +272,7 @@ class Game {
     ) {
       this.openDoor(nextGridRow, nextGridCol);
     } else if (this.board.grid[nextGridRow][nextGridCol] === 5) {
-      this.gameWon();
+      this.gameOver("win");
     } else if (
       this.board.grid[nextGridRow][nextGridCol] !== 1 &&
       this.board.grid[nextGridRow][nextGridCol] !== 4
@@ -280,16 +283,14 @@ class Game {
 
   gameWon(nextGridRow, nextGridCol) {
     this.chest.img = document.getElementById("chestOpen");
-    const fanfare = document.getElementById("fanfare");
-    fanfare.play();
+    this.playSound("fanfare");
   }
 
   openDoor(nextGridRow, nextGridCol) {
     this.board.grid[nextGridRow][nextGridCol] = 0;
     delete this.doors[[nextGridRow, nextGridCol]];
     this.warrior.keys -= 1;
-    const doorSound = document.getElementById("doorSound");
-    doorSound.play();
+    this.playSound("doorSound");
   }
 
   pickupKey(nextPos, nextGridRow, nextGridCol) {
@@ -297,15 +298,20 @@ class Game {
     this.warrior.keys += 1;
     this.board.grid[nextGridRow][nextGridCol] = 0;
     delete this.keys[[nextGridRow, nextGridCol]];
-    const keySound = document.getElementById("keySound");
-    keySound.play();
+    this.playSound("keySound");
   }
 
   fire(dir) {
     const fireball = new Fireball(this.ctx, this.warrior.pos, dir);
     this.fireballs.push(fireball);
-    const haduken = document.getElementById("haduken");
-    haduken.play();
+    this.playSound("haduken");
+  }
+
+  playSound(soundId) {
+    const sound = document.getElementById(soundId);
+    sound.pause();
+    sound.currentTime = 0;
+    sound.play();
   }
 
   moveFireball(fireball) {
@@ -329,8 +335,7 @@ class Game {
       if (this.checkCollision(fireball, ghost)) {
         delete this.ghosts[ghost.pos];
         this.fireballs.shift();
-        const enemyKillSound = document.getElementById("enemyKill");
-        enemyKillSound.play();
+        this.playSound("enemyKill");
       }
     });
   }
@@ -355,7 +360,10 @@ class Game {
     const nextGridRow = gridPos[0];
     const nextGridCol = gridPos[1];
 
-    if (this.board.grid[nextGridRow][nextGridCol] === 1) {
+    if (
+      this.board.grid[nextGridRow][nextGridCol] === 1 ||
+      this.board.grid[nextGridRow][nextGridCol] === 4
+    ) {
       dir = [dir[0] * -1, dir[1] * -1];
       nextPos = [ghost.pos[0] + dir[0], ghost.pos[1] + dir[1]];
       ghost.toggleDir();
@@ -365,8 +373,25 @@ class Game {
     ghost.pos = nextPos;
 
     if (this.checkCollision(ghost, this.warrior)) {
-      console.log("game over!");
+      this.gameOver("lose");
     }
+  }
+
+  gameOver(result) {
+    let sound;
+    let msg;
+
+    if (result === "win") {
+      sound = "fanfare";
+      msg = "You Win";
+    } else if (result === "lose") {
+      sound = "death";
+      msg = "Game Over";
+    }
+    this.playSound(sound);
+    clearInterval(this.intervalId);
+    document.getElementById("gameOverScreen").classList.remove("hide");
+    document.getElementById("gameOverMsg").innerHTML = msg;
   }
 
   moveObjects() {
@@ -421,21 +446,13 @@ module.exports = Grids;
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Grids = __webpack_require__(4);
-const Board = __webpack_require__(2);
-const Game = __webpack_require__(3);
 const GameView = __webpack_require__(12);
 
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  const boardGrid = Grids.levelOne();
-
-  const board = new Board(ctx, boardGrid);
-
-  const game = new Game(ctx, board);
-  new GameView(ctx, game).start();
+  new GameView(ctx).start();
 });
 
 
@@ -624,18 +641,21 @@ module.exports = Sprite;
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+const Game = __webpack_require__(3);
 
 class GameView {
-  constructor(ctx, game) {
+  constructor(ctx) {
     this.ctx = ctx;
-    this.game = game;
+    this.game = undefined;
     this.framesPerSecond = 60;
     this.sounds = document.querySelectorAll("audio");
     this.soundToggle = document.getElementById("soundToggle");
     this.update = this.update.bind(this);
     this.bindKeyHandlers = this.bindKeyHandlers.bind(this);
     this.soundHandler = this.soundHandler.bind(this);
+    this.restart = this.restart.bind(this);
   }
 
   bindKeyHandlers() {
@@ -663,6 +683,12 @@ class GameView {
       }
     });
     this.soundToggle.addEventListener("change", this.soundHandler);
+    document.getElementById("restartBtn").addEventListener("click", this.restart);
+  }
+
+  restart() {
+    document.getElementById("gameOverScreen").classList.add("hide");
+    this.play();
   }
 
   soundHandler() {
@@ -677,6 +703,7 @@ class GameView {
   }
 
   start() {
+    this.bindKeyHandlers();
     const splashScreen = document.getElementById("splashScreen");
     const playButton = document.getElementById("playButton");
     playButton.addEventListener("click", () => {
@@ -686,8 +713,8 @@ class GameView {
   }
 
   play() {
-    this.bindKeyHandlers();
-    setInterval(this.update, 1000 / this.framesPerSecond);
+    this.game = new Game(this.ctx);
+    this.game.intervalId = setInterval(this.update, 1000 / this.framesPerSecond);
   }
 }
 

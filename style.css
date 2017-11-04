@@ -79,6 +79,34 @@ h1 {
   display: none;
 }
 
+#gameOverScreen {
+  width: 400px; 
+  height: 200px;
+  position: absolute;
+  background: #000;
+  top: 180px;
+  left: 200px;
+  text-align: center;
+  border: 2px solid white;
+}
+
+#gameOverMsg {
+  color: #0A5DE2;
+  font-size: 38px;
+  font-family: pressStart;
+  margin-top: 30px;
+}
+
+#restartBtn {
+  border: 2px solid white;
+  font-family: pressStart;
+  color: #0A5DE2;
+  padding: 10px;
+  width: 120px;
+  margin: auto;
+  margin-top: 35px;
+}
+
 #playButton {
   top: 210px;
   right: 35%;
@@ -91,7 +119,7 @@ h1 {
   background: #000000;
 }
 
-#playButton:hover {
+#playButton:hover, #restartBtn:hover {
   cursor: pointer;
   color: #76d645;
 }
@@ -170,7 +198,6 @@ canvas {
   background-color: #76d645;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-  /* border-radius: 34px; */
 }
 
 .slider:before {
@@ -183,7 +210,6 @@ canvas {
   background-color: white;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-  /* border-radius: 50%; */
 }
 
 input:checked + .slider {
