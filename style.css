@@ -143,6 +143,10 @@ canvas {
   flex-direction: row;
 }
 
+.sound-control p { 
+  font-family: menlo;
+}
+
 .switch {
   margin-left: 10px;
   position: relative;
