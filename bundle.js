@@ -635,6 +635,7 @@ class GameView {
     this.soundToggle = document.getElementById("soundToggle");
     this.update = this.update.bind(this);
     this.bindKeyHandlers = this.bindKeyHandlers.bind(this);
+    this.soundHandler = this.soundHandler.bind(this);
   }
 
   bindKeyHandlers() {
@@ -661,16 +662,16 @@ class GameView {
           break;
       }
     });
+    this.soundToggle.addEventListener("change", this.soundHandler);
   }
 
-  checkSoundToggle() {
+  soundHandler() {
     this.sounds.forEach( sound => {
       this.soundToggle.checked === true ? sound.muted = true : sound.muted = false;
     });
   }
 
   update() {
-    this.checkSoundToggle();
     this.game.moveObjects();
     this.game.render();
   }
