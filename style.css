@@ -8,6 +8,15 @@
   src: url("./assets/PressStart2P.ttf");
 }
 
+@font-face {
+  font-family: menlo;
+  src: url("./assets/Menlo.ttc");
+}
+
+ul { 
+  list-style: none;
+}
+
 p {
   color: #fff;
 }
@@ -71,7 +80,7 @@ h1 {
 }
 
 #playButton {
-  top: 220px;
+  top: 210px;
   right: 35%;
   position: absolute;
   color: #0A5DE2;
@@ -93,8 +102,8 @@ h1 {
 
 .control-info {
   position: absolute;
-  bottom: 25px;
-  left: 25px;
+  bottom: 40px;
+  left: 210px;
   width: 45%;
   height: 200px;
   border: 2px solid white;
@@ -105,7 +114,19 @@ h1 {
   color: #0A5DE2;
   font-family: pressStart;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 30px;
+  font-size: 24px;
+}
+
+.controls {
+  margin-top: 30px;
+}
+
+.controls li {
+  color: #fff;
+  font-family: menlo;
+  font-size: 22px;
+  margin: 20px 0;
 }
 
 body {
