@@ -35,7 +35,7 @@ Here is the actual sprite image.
 
 ![sdb sprite](https://github.com/brainzilla79/super-dungeon-boy/blob/master/docs/boy.png)
 
-The update method takes a y value and calculates an x value and then updates the objects x and y value, which represent the top left vertex of the portion of the sprite that will be rendered on the screen. Eveytime this method is called the portion of the sprite that is rendered moves over by one column and then cycles back around when it reaches the end with the modulo operator. The row that is rendered is determined by the y value that is passed in. 
+The update method takes a y value and calculates an x value and then updates the objects x and y value, which represent the top left coordinate of the portion of the sprite that will be rendered on the screen. Eveytime this method is called the portion of the sprite that is rendered moves over by one column and then cycles back around when it reaches the end with the modulo operator. The row that is rendered is determined by the y value that is passed in. 
 
 The update method is called in the class, called `Warrior` that controls super dungeon boy. 
 In that class I defined a method called animate that takes in a y value and a direction.
